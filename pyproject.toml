@@ -1,0 +1,57 @@
+[tool.ruff.lint] 
+select = ["ALL"]
+ignore = [
+    "D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107",
+
+    "ANN001", "ANN002", "ANN003", "ANN101", "ANN102", "ANN201", "ANN202",
+
+    "T201",
+
+    "E501",
+
+    "Q003",
+
+    "RUF003",
+
+    "EM101", "TRY003",
+
+
+    "SIM105", "RET505",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+  "slow: slow tests"
+]
+[tool.poetry.dependencies]
+django = "2.2.10"
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+strict = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_calls = true
+check_untyped_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unreachable = true
+no_implicit_reexport = true
+strict_equality = true
+ignore_missing_imports = true
+follow_imports = "skip"
+pretty = true
+install_types = true
+disallow_any_generics = true
+disallow_any_explicit = true
+disallow_untyped_decorators = true
+warn_unused_configs = true
+
+
+[tool.django-stubs]
+django_settings_module = "mysite.settings"
+[tool.mypy."tools.*"]
+ignore_errors = true
+

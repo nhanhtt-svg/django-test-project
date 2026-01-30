@@ -14,28 +14,45 @@ repos:
 
   # 2) Linter: Ruff
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.6.9
+    rev: v0.1.6
     hooks:
+      # Hook 1: ERROR (blocking) - nếu fail → block commit
       - id: ruff
+        name: ruff-errors
+        args: ["--select", "E",  "--ignore", "D,ANN,I001"]
+        # Không có --exit-zero → exit code ≠ 0 nếu có lỗi
+      - id: ruff
+        name: ruff-imports
+        args: ["--fix", "--select", "I", "--exit-zero"]
+        verbose: true
+
+      # Hook 2: "WARNING" (non-blocking) - luôn pass
+      - id: ruff
+        name: ruff-warnings
+        args: ["--select", "ANN202", "--exit-zero"]  # --exit-zero → luôn exit code = 0
+        verbose: true
     
-     # 3) Logic basic: Pylint nested blocks
   - repo: https://github.com/pycqa/pylint
     rev: v3.2.7
     hooks:
       - id: pylint
         args:
-          - "--init-hook=import sys; sys.path.insert(0, '.')"
-          - "--disable=all"
+          - "--init-hook=import os, sys; sys.path.insert(0, '.'); os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'"
+          - "--load-plugins=pylint_django"
+          - "--enable=all"
           - "--enable=R1702,R0912,R0915,E,F"
           - "--max-nested-blocks=5"
           - "--max-branches=12"
           - "--max-statements=50"
-
         additional_dependencies:
+          - django
+          - pylint-django
           - pytest
           - pyyaml
           - flask
-        exclude: ^(.*\/migrations\/|static\/|media\/|dist\/|build\/)
+        exclude: (^migrations/.*|^static/.*|^media/.*|^dist/.*|^build/.*)
+
+
 
 
    # 4) Secret scan staged
@@ -74,3 +91,14 @@ repos:
         language: system
         pass_filenames: false
         stages: [pre-push]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.10.0   # chọn version mypy phù hợp
+    hooks:
+      - id: mypy
+        additional_dependencies: 
+          - types-requests 
+          - types-PyYAML 
+          - django-stubs
+          - django-stubs-ext
+

@@ -1,3 +1,63 @@
-from django.shortcuts import render
+from typing import TypedDict
 
-# Create your views here.
+from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404
+from django.views import View
+
+from .models import Author, Book
+
+
+class BookData(TypedDict):
+    title: str
+    pages: int
+    author: str
+    publisher: str | None
+    is_long: bool
+
+
+class BookDetailData(TypedDict):
+    title: str
+    pages: int
+    author: str
+    publisher: str | None
+    description: str
+
+
+class BookListView(View):
+    def get(self, request: HttpRequest) -> HttpResponse:
+        books = Book.objects.select_related("author", "publisher").all()
+        data: list[BookData] = [
+            {
+                "title": book.title, 
+                "pages": book.pages,
+                "author": book.author.name,
+                "publisher": book.publisher.name if book.publisher else None,
+                "is_long": book.is_long_book(),
+            }
+            for book in books
+        ]
+        return JsonResponse(data, safe=False)
+
+
+class BookDetailView(View):
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        book = get_object_or_404(Book.objects.select_related("author", "publisher"), pk=pk)
+        data: BookDetailData = {
+            "title": book.title,  
+            "pages": book.pages,
+            "author": book.author.name,
+            "publisher": book.publisher.name if book.publisher else None,
+            "description": book.short_description(),
+        }
+        return JsonResponse(data)
+
+
+class AuthorBooksView(View):
+    def get(self, request: HttpRequest, author_id: int) -> HttpResponse:
+        author = get_object_or_404(Author, pk=author_id)
+        books = author.books.all()
+        data = {
+            "author": author.name,
+            "books": [book.title for book in books],
+        }
+        return JsonResponse(data)

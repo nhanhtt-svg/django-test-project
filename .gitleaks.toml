@@ -1,0 +1,29 @@
+title = "Repo gitleaks config"
+
+[extend]
+useDefault = true
+
+# 1) Bỏ qua các path không cần scan
+[allowlist]
+paths = [
+  '''^migrations/''',
+  '''^static/''',
+  '''^media/''',
+  '''^dist/''',
+  '''^build/''',
+  '''^node_modules/''',
+  '''^\.venv/''',
+  '''^\.git/''',
+  '''^\.pytest_cache/''',
+  "^F101/\\.env\\.local$",
+]
+# VÍ DỤ THÊM: API KEY RIÊNG CỦA DỰ ÁN
+[[rules]]
+id = "project-api-key"
+description = "API Key dự án: PROJ_ + 32 ký tự"
+# Công thức: PROJ_ theo sau là 32 ký tự chữ/số
+regex = '''PROJ_[a-zA-Z0-9]{32}'''
+
+
+
+

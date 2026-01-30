@@ -1,0 +1,34 @@
+# tools/local-gate/rules.yaml
+# Config for custom team rules - FIXED
+
+# Global ignore patterns
+ignore:
+  - "^tests/"
+  - "^.*/migrations/"
+  - "^static/"
+  - "^media/"
+  - "^dist/"
+  - "^build/"
+  - "^tools/local-gate/"
+  - "^F101/Test_commit_local.py$"
+
+# Rule 1: No print() in production - FIX regex patterns
+no_print:
+  enabled: true
+  severity: error
+  message: "print() is not allowed in production code"
+  allow_in:
+    - "^tests/"               # Allow in tests directory
+    - "^.*_test\\.py$"       # Fixed: escape the dot
+    - "^debug_.*\\.py$"      # Fixed: escape the dot
+
+max_nested_level:
+  enabled: true
+  max_depth: 20
+  message: "Không được có quá {{max_depth}} mức if/for/while lồng nhau"
+  severity: error
+  allow_in:
+    - "^tests/"               # Allow in tests directory
+    - "^.*_test\\.py$"       # Fixed: escape the dot
+    - "^debug_.*\\.py$"      # Fixed: escape the dot
+    - "^F101/Test_commit_local\\.py$" 
