@@ -14,22 +14,22 @@ repos:
 
   # 2) Linter: Ruff
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.6
+    rev: v0.14.14
     hooks:
       # Hook 1: ERROR (blocking) - nếu fail → block commit
-      - id: ruff
+      - id: ruff-check
         name: ruff-errors
-        args: ["--select", "E",  "--ignore", "D,ANN,I001"]
-        # Không có --exit-zero → exit code ≠ 0 nếu có lỗi
-      - id: ruff
+        args: ["--config=pyproject.toml"]
+
+      - id: ruff-check
         name: ruff-imports
         args: ["--fix", "--select", "I", "--exit-zero"]
         verbose: true
 
       # Hook 2: "WARNING" (non-blocking) - luôn pass
-      - id: ruff
+      - id: ruff-check
         name: ruff-warnings
-        args: ["--select", "ANN202", "--exit-zero"]  # --exit-zero → luôn exit code = 0
+        args: ["--select", "E501", "--exit-zero"]  # --exit-zero → luôn exit code = 0
         verbose: true
     
   - repo: https://github.com/pycqa/pylint
@@ -37,10 +37,10 @@ repos:
     hooks:
       - id: pylint
         args:
-          - "--init-hook=import os, sys; sys.path.insert(0, '.'); os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'"
+          - "--init-hook=import os, sys; sys.path.insert(0, '.'); os.environ.setdefault('DJANGO_SETTINGS_MODULE','mysite.settings'); import django; django.setup()"
           - "--load-plugins=pylint_django"
+          - "--django-settings-module=mysite.settings"
           - "--enable=all"
-          - "--enable=R1702,R0912,R0915,E,F"
           - "--max-nested-blocks=5"
           - "--max-branches=12"
           - "--max-statements=50"
@@ -49,7 +49,6 @@ repos:
           - pylint-django
           - pytest
           - pyyaml
-          - flask
         exclude: (^migrations/.*|^static/.*|^media/.*|^dist/.*|^build/.*)
 
 
@@ -101,4 +100,18 @@ repos:
           - types-PyYAML 
           - django-stubs
           - django-stubs-ext
+
+  - repo: https://github.com/psf/black
+    rev: 24.1.1   # chọn version Black ổn định
+    hooks:
+      - id: black
+        name: black-check
+        language_version: python3
+        args:
+          - "--check"
+          - "--diff"
+          - "--skip-string-normalization"  
+          - "--target-version=py312"  
+        types: [python]
+
 

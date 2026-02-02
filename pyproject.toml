@@ -1,23 +1,70 @@
-[tool.ruff.lint] 
+
+[tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107",
+    # --- Formatting / docstring style ---
+    "E501", "E712",
+    "D212", "D213",
+    "D400", "D401", "D403",
+    "D405", "D406", "D407", "D408", "D409", "D410", "D411", "D412", "D413",
+    "D415",
 
-    "ANN001", "ANN002", "ANN003", "ANN101", "ANN102", "ANN201", "ANN202",
+    # --- Annotations ---
+    "ANN001",
+    "ANN002", "ANN003",
+    "ANN201",
+    "ANN206",
+    "ANN401",
 
-    "T201",
+    # --- Bugbear / other ---
+    "B028",
+    "B903",
+    "B911", "B912",
 
-    "E501",
+    # --- Airflow (AIR*) ---
+    "AIR301", "AIR302",
+    "AIR311", "AIR312",
 
+    # --- Eradicate ---
+    "ERA001",
+
+    # --- FastAPI (FAST*) ---
+    "FAST001", "FAST002",
+
+    # --- flake8-2020 / flake8-print ---
+    "T201", "T203",
+
+    # --- flake8-quotes / ruff ---
     "Q003",
-
     "RUF003",
 
-    "EM101", "TRY003",
+    # --- flake8-async ---
+    "ASYNC109", "ASYNC115", "ASYNC116",
 
+    # --- security / misc ---
+    "S404",
+    "COM818",
 
-    "SIM105", "RET505",
+    # --- other plugin families you listed ---
+    "CPY001",
+    "DJ008", "DJ013",
+    "EM102",
+    "FA100", "FA102",
+    "LOG001", "LOG015",
+    "PIE808",
+    "SLOT000", "SLOT001", "SLOT002",
+    "FLY002",
+    "PD011",
+    "DOC201", "DOC402", "DOC403", "DOC502",
+    "DOC501",
+    "UP001",
+
+    # --- YTT ---
+    "YTT201", "YTT202", "YTT203", "YTT204",
+    "YTT301", "YTT302", "YTT303",
 ]
+
+
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -49,9 +96,12 @@ disallow_any_explicit = true
 disallow_untyped_decorators = true
 warn_unused_configs = true
 
-
 [tool.django-stubs]
 django_settings_module = "mysite.settings"
+strict_settings = true
+strict_model_abstract_attrs = true
+
 [tool.mypy."tools.*"]
 ignore_errors = true
+
 
