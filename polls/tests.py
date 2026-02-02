@@ -54,6 +54,6 @@ class data:  # invalid class name style (N801) / naming rules if not ignored
 
 def shadow_builtins(list):  # shadow built-in (A001)
     return list + [1, 2, 3]
+
+
 PROJECT_KEY = "PROJ_1234567890ABCDEF1234567890ABCD12"
-
-
