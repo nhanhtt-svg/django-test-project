@@ -1,59 +1,67 @@
-# tools/local-gate/ruff_bad_example.py
-import json
-import os
-import subprocess
-import sys
-from datetime import datetime
-
+import pytest
 from django.contrib.auth.models import User
+from django.test import Client
+from django.urls import reverse
+
+from polls.models import Author, Book, Publisher
 
 
-def very_bad_function(items=[], json={}):  # mutable defaults (B006) + shadowing builtin json name (A002)
-    unused = 123  # unused variable (F841)
-    print("debug:", items)  # print statement (T201)
-
-    # line too long (E501) - deliberately > 88 chars
-    long_line = "This is an intentionally extremely long string designed to exceed the default Ruff line length of eighty-eight characters."
-
-    # assert used (S101)
-    assert items is not None
-
-    # open without encoding (PTH123 or similar depending on enabled rules; also could trigger UP/PL checks)
-    f = open("tmp.txt", "w")
-    f.write(long_line)
-    f.close()
-
-    # unsafe eval (S307)
-    x = eval("1 + 2")
-
-    # exec used (S102)
-    exec("y = x + 1")  # noqa: S102  # (remove noqa if you want it to fail)
-
-    # subprocess with shell=True (S602)
-    subprocess.run("echo hello", shell=True, check=False)
-
-    # broad except (BLE001 or similar)
-    try:
-        1 / 0
-    except Exception:
-        pass
-
-    # os.system (S605)
-    os.system("echo 'hi'")
-
-    # pointless comparison / logic oddities (various rules)
-    if x == True:  # E712
-        return {"ok": True, "time": datetime.now()}  # naive datetime usage could trigger DTZ rules if enabled
-    return {"ok": False}
+@pytest.mark.django_db
+def test_book_str():
+    author = Author.objects.create(name="Nhan", age=30)
+    book = Book.objects.create(title="Test Book", pages=123, author=author)
+    assert str(book) == "Test Book"
 
 
-class data:  # invalid class name style (N801) / naming rules if not ignored
-    def __init__(self):
-        self.value = 1
+@pytest.mark.django_db
+def test_book_is_long_book():
+    author = Author.objects.create(name="Nhan", age=30)
+    book = Book.objects.create(title="Long Book", pages=600, author=author)
+    assert book.is_long_book() is True
 
 
-def shadow_builtins(list):  # shadow built-in (A001)
-    return list + [1, 2, 3]
+@pytest.mark.django_db
+def test_book_short_description():
+    author = Author.objects.create(name="Nhan", age=30)
+    book = Book.objects.create(title="Short Book", pages=100, author=author)
+    assert "Short Book" in book.short_description()
 
 
-PROJECT_KEY = "PROJ_1234567890ABCDEF1234567890ABCD12"
+@pytest.mark.django_db
+def test_book_list_view(client: Client):
+    author = Author.objects.create(name="Nhan", age=30)
+    publisher = Publisher.objects.create(name="NXB", country="VN")
+    Book.objects.create(title="Book1", pages=200, author=author, publisher=publisher)
+
+    url = reverse("book-list") 
+    response = client.get(url)
+    assert response.status_code == 200
+    data = response.json()
+    assert data[0]["title"] == "Book1"
+    assert data[0]["author"] == "Nhan"
+
+
+@pytest.mark.django_db
+def test_book_detail_view(client: Client):
+    author = Author.objects.create(name="Nhan", age=30)
+    book = Book.objects.create(title="Book2", pages=300, author=author)
+
+    url = reverse("book-detail", args=[book.pk])
+    response = client.get(url)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["title"] == "Book2"
+    assert data["author"] == "Nhan"
+
+
+@pytest.mark.django_db
+def test_author_books_view(client: Client):
+    author = Author.objects.create(name="Nhan", age=30)
+    Book.objects.create(title="Book3", pages=150, author=author)
+
+    url = reverse("author-books", args=[author.pk])
+    response = client.get(url)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["author"] == "Nhan"
+    assert "Book3" in data["books"]

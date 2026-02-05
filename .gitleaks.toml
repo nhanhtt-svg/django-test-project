@@ -2,10 +2,8 @@ title = "Repo gitleaks config"
 
 [extend]
 useDefault = true
-disabledRules = ["generic-api-key", "discord-api-token"]
 
 
-# 1) Bỏ qua các path không cần scan
 [allowlist]
 paths = [
   '''^migrations/''',

@@ -28,11 +28,11 @@ class BookListView(View):
         books = Book.objects.select_related("author", "publisher").all()
         data: list[BookData] = [
             {
-                "title": book.title, 
+                "title": book.title,
                 "pages": book.pages,
-                "author": book.author.name,
-                "publisher": book.publisher.name if book.publisher else None,
-                "is_long": book.is_long_book(),
+                "author": book.author.full_name,
+                "publisher": book.publisher.title if book.publisher else None,
+                "is_long": book.is_big_book(),
             }
             for book in books
         ]
@@ -43,21 +43,20 @@ class BookDetailView(View):
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         book = get_object_or_404(Book.objects.select_related("author", "publisher"), pk=pk)
         data: BookDetailData = {
-            "title": book.title,  
-            "pages": book.pages,
-            "author": book.author.name,
-            "publisher": book.publisher.name if book.publisher else None,
-            "description": book.short_description(),
+            "pages": book.page_count,
+            "author": book.author.full_name,
+            "publisher": book.publisher.title if book.publisher else None,
+            "description": book.long_description(),
         }
         return JsonResponse(data)
 
 
 class AuthorBooksView(View):
     def get(self, request: HttpRequest, author_id: int) -> HttpResponse:
-        author = get_object_or_404(Author, pk=author_id)
+        author = Author.objects.filter(pk=author_id)
         books = author.books.all()
         data = {
-            "author": author.name,
-            "books": [book.title for book in books],
+            "author": author.full_name,
+            "books": [book.name for book in books],
         }
         return JsonResponse(data)

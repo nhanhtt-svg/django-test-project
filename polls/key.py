@@ -1,25 +1,26 @@
-# test_secrets.py
 
-# 1Password secret key
-ONEPASSWORD_KEY = "A3-ABCDEF-12345678901-ABCDE-ABCDE-ABCDE"
+import math
+import os
+import sys
 
-# Adafruit API key (32 ký tự)
-ADAFRUIT_KEY = "adafruit = 'abcdefghijklmnopqrstuvwxyz123456'"
 
-# AWS Access Key ID
-AWS_ACCESS_KEY_ID = "AKIA1234567890ABCD"
+def badFunctionName(x,y,z,a,b,c,d,e,f,g):  
+  result=x+y
+  if result>10: print("Big")   
+  else: 
+      if result<0: 
+          if result<-10: 
+              if result<-20: 
+                  print("Nested too deep")   
+  return result
 
-# AWS Secret Key (generic-api-key sẽ bắt)
-AWS_SECRET_KEY = "aws_secret_access_key = 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'"
+class myclass:   
+    def __init__(self):
+        pass
 
-# Discord API token (64 ký tự hex)
-DISCORD_TOKEN = "discord = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'"
+    def only_one_method(self):  
+        print("demo")
 
-# GCP API key (AIza + 35 ký tự)
-GCP_API_KEY = "AIzaSyA1234567890abcdefghijklmnopqrstuvwx"
-
-# Generic API key (entropy cao)
-GENERIC_KEY = "api_key = '1234567890ABCDEF1234567890ABCDEF'"
-
-# Custom project key (PROJ_ + 32 ký tự)
-PROJECT_KEY = "PROJ_1234567890ABCDEF1234567890ABCD12"
+def unused_variable_demo():
+    a = 123   
+    return True

@@ -1,0 +1,17 @@
+[MASTER]
+load-plugins=pylint_django
+ignore=migrations,static,media,dist,build
+
+[MESSAGES CONTROL]
+enable=all
+disable=missing-docstring,too-few-public-methods,invalid-name
+
+[FORMAT] max-line-length=100
+
+[DESIGN]
+max-nested-blocks=5
+max-branches=12
+max-statements=50
+
+[DJANGO]
+django-settings-module=mysite.settings

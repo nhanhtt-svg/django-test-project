@@ -7,7 +7,7 @@ ignore = [
     "D212", "D213",
     "D400", "D401", "D403",
     "D405", "D406", "D407", "D408", "D409", "D410", "D411", "D412", "D413",
-    "D415",
+    "D415", "D203", "D211","Q000",
 
     # --- Annotations ---
     "ANN001",
@@ -67,41 +67,29 @@ ignore = [
 
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
-markers = [
-  "slow: slow tests"
-]
+python_files = ["tests.py", "test_*.py", "*_test.py"]
+DJANGO_SETTINGS_MODULE = "mysite.settings"
+
 [tool.poetry.dependencies]
 django = "2.2.10"
 
+
 [tool.mypy]
 plugins = ["mypy_django_plugin.main"]
-strict = true
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
-disallow_untyped_calls = true
 check_untyped_defs = true
-warn_redundant_casts = true
 warn_unused_ignores = true
 warn_return_any = true
-warn_unreachable = true
-no_implicit_reexport = true
-strict_equality = true
-ignore_missing_imports = true
-follow_imports = "skip"
-pretty = true
-install_types = true
-disallow_any_generics = true
-disallow_any_explicit = true
-disallow_untyped_decorators = true
 warn_unused_configs = true
+exclude = ["migrations"]
 
 [tool.django-stubs]
 django_settings_module = "mysite.settings"
 strict_settings = true
 strict_model_abstract_attrs = true
 
+
 [tool.mypy."tools.*"]
 ignore_errors = true
-
 
