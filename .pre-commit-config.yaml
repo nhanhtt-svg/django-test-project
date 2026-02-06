@@ -85,6 +85,7 @@ repos:
         pass_filenames: false
         stages: [pre-push]
         always_run: true
+        exclude: ^(.*\/migrations\/|static\/|media\/|dist\/|build\/)
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.10.0   # chọn version mypy phù hợp

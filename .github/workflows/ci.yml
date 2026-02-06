@@ -28,7 +28,6 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Nếu muốn scan toàn repo thay vì diff PR, thêm dòng sau:
-          # GITLEAKS_ENABLE_ALL: true
+        
 
 
