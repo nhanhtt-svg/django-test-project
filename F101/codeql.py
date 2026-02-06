@@ -1,9 +1,19 @@
-# Vulnerable: SQL Injection qua string concatenation
-from django.db import connection
+from flask import Flask, request
+import sqlite3
 
-def get_user(request, username):
-    cursor = connection.cursor()
-    # Không sanitize input → attacker có thể inject: ' OR '1'='1
-    query = f"SELECT * FROM users WHERE username = '{username}'"
-    cursor.execute(query)
-    return cursor.fetchall()
+app = Flask(__name__)
+
+@app.route('/search')
+def search_users():
+    query = request.args.get('q', '')
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    
+    # Vulnerable: taint từ user input chảy vào query string (format hoặc %)
+    sql = "SELECT * FROM users WHERE name LIKE '%{}%' OR email = '{}'".format(query, query)
+    # Hoặc: sql = f"SELECT * FROM users WHERE name LIKE '%{query}%'"
+    
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    conn.close()
+    return str(results)
