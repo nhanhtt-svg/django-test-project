@@ -89,7 +89,7 @@ django_settings_module = "mysite.settings"
 strict_settings = true
 strict_model_abstract_attrs = true
 
-
-[tool.mypy."tools.*"]
+[[tool.mypy.overrides]]
+module = ["tools.*"]
 ignore_errors = true
 
