@@ -14,7 +14,7 @@ jobs:
           queries: +security-and-quality
           query-filters: |
             - exclude:
-                id: py/unused local variable 
+                id: py/unused-local-variable 
             - exclude:
                 id: py/redundant-assignment
             - exclude:
