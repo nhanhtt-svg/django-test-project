@@ -1,4 +1,5 @@
 name: CodeQL
+
 on:
   pull_request:
     branches: [ main ]
@@ -8,16 +9,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: github/codeql-action/init@v3
         with:
           languages: python
-          queries: +security-and-quality
-          query-filters: |
-            - exclude:
-                id: py/unused-local-variable
-            - exclude:
-                id: py/redundant-assignment
-            - exclude:
-                id: py/log-injection
+          queries: +security-and-quality   # Giữ nguyên để thêm quality rules
+          config: |
+            query-filters:
+              - exclude:
+                  id: py/unused-local-variable
+              - exclude:
+                  id: py/redundant-assignment
+              - exclude:
+                  id: py/log-injection
+
       - uses: github/codeql-action/autobuild@v3
       - uses: github/codeql-action/analyze@v3
