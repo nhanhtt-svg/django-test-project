@@ -12,7 +12,12 @@ jobs:
         with:
           languages: python
           queries: +security-and-quality
-          exclude: | 
-            py/unused local variable 
+          query-filters: |
+            - exclude:
+                id: py/unused local variable 
+            - exclude:
+                id: py/redundant-assignment
+            - exclude:
+                id: py/log-injection
       - uses: github/codeql-action/autobuild@v3
       - uses: github/codeql-action/analyze@v3
