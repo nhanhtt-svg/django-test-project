@@ -22,4 +22,5 @@ class myclass:
         print("demo")
 
 def unused_variable_demo():
+    a = 123   
     return True
