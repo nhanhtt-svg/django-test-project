@@ -1,0 +1,3 @@
+deny-packages:
+  - name: my-package
+    version: "*"
