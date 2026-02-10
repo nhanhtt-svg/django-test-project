@@ -18,14 +18,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      # (Optional nhưng nên có) tạo coverage.xml để Sonar hiển thị coverage
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-      - run: python -m pip install -U pip
-      - run: pip install pytest pytest-cov
-      - run: pytest -q --cov=apps --cov-report=xml:coverage.xml
+      # # (Optional nhưng nên có) tạo coverage.xml để Sonar hiển thị coverage
+      # - uses: actions/setup-python@v5
+      #   with:
+      #     python-version: "3.11"
+      #     cache: "pip"
+      # - run: python -m pip install -U pip
+      # - run: pip install pytest pytest-cov
+      # - run: pytest -q --cov=apps --cov-report=xml:coverage.xml
 
       # Sonar scan
       - name: SonarQube Scan

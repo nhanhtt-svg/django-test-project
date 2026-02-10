@@ -1,7 +1,7 @@
 name: Semgrep Security Audit
 
 on:
-  pull_request:   # chạy khi có PR mở hoặc update
+  pull_request: 
 
 permissions:
   contents: read
@@ -17,4 +17,4 @@ jobs:
           python-version: "3.11"
           cache: "pip"
       - run: python -m pip install --upgrade pip semgrep
-      - run: semgrep --config p/security-audit --config p/owasp-top-ten --error .
+      - run: semgrep --config p/security-audit --config p/owasp-top-ten --config p/secrets --error .
