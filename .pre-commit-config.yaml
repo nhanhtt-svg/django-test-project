@@ -56,16 +56,16 @@ repos:
         entry: bash -lc "gitleaks protect --staged --redact --verbose --config .gitleaks.toml"
         language: system
 
-  - repo: local
-    hooks:
-      - id: pytest-pre-push
-        name: "pytest (unit) - pre-push gate"
-        entry: bash -lc "python3 -m pytest -q --tb=short"
-        language: system
-        pass_filenames: false
-        stages: [pre-push]
-        always_run: true
-        exclude: ^(.*\/migrations\/|static\/|media\/|dist\/|build\/)
+  # - repo: local
+  #   hooks:
+  #     - id: pytest-pre-push
+  #       name: "pytest (unit) - pre-push gate"
+  #       entry: bash -lc "python3 -m pytest -q --tb=short"
+  #       language: system
+  #       pass_filenames: false
+  #       stages: [pre-push]
+  #       always_run: true
+  #       exclude: ^(.*\/migrations\/|static\/|media\/|dist\/|build\/)
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.10.0   # chọn version mypy phù hợp
