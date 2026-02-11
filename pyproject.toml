@@ -68,14 +68,14 @@ ignore = [
 
 [tool.pytest.ini_options]
 python_files = ["tests.py", "test_*.py", "*_test.py"]
-DJANGO_SETTINGS_MODULE = "mysite.settings"
+
 
 [tool.poetry.dependencies]
 django = "2.2.10"
 
 
 [tool.mypy]
-plugins = ["mypy_django_plugin.main"]
+
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 check_untyped_defs = true
@@ -84,12 +84,6 @@ warn_return_any = true
 warn_unused_configs = true
 exclude = ["migrations"]
 
-[tool.django-stubs]
-django_settings_module = "mysite.settings"
-strict_settings = true
-strict_model_abstract_attrs = true
 
-[[tool.mypy.overrides]]
-module = ["tools.*"]
-ignore_errors = true
+
 
