@@ -2,7 +2,8 @@ title = "Repo gitleaks config"
 
 [extend]
 useDefault = true
-
+[git]
+no-git = true
 
 [allowlist]
 paths = [
