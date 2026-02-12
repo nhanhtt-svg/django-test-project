@@ -26,15 +26,8 @@ jobs:
           fetch-depth: 1   # chỉ lấy commit mới nhất
       - name: Install gitleaks
         run: |
-          curl -s https://api.github.com/repos/gitleaks/gitleaks/releases/latest \
-          | grep "browser_download_url.*linux-x64" \
-          | cut -d '"' -f 4 \
-          | wget -qi -
-          tar -xvf gitleaks*linux-x64.tar.gz
-          sudo mv gitleaks /usr/local/bin/
+          go install github.com/gitleaks/gitleaks/v8@latest
+          echo "$HOME/go/bin" >> $GITHUB_PATH
       - name: Run gitleaks scan (current files only)
         run: gitleaks detect --redact --no-git --source .
-
-
-
 
