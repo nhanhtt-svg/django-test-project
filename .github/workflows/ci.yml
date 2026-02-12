@@ -23,14 +23,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1  
-      - name: Run gitleaks scan
+          fetch-depth: 1   # chỉ lấy commit mới nhất
+      - name: Install gitleaks
         run: |
-          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.24.3/gitleaks_8.24.3_linux_x64.tar.gz | tar -xz gitleaks
-          ./gitleaks detect --no-git --source=. --redact --verbose --report-format=sarif --report-path=gitleaks-report.sarif --exit-code=2 || echo "Leaks found, check report"
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          curl -s https://api.github.com/repos/gitleaks/gitleaks/releases/latest \
+          | grep "browser_download_url.*linux-x64" \
+          | cut -d '"' -f 4 \
+          | wget -qi -
+          tar -xvf gitleaks*linux-x64.tar.gz
+          sudo mv gitleaks /usr/local/bin/
+      - name: Run gitleaks scan (current files only)
+        run: gitleaks detect --redact --no-git --source .
+
 
 
 
