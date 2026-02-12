@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13.5"
+      - name: Install pre-commit
+        run: pip install pre-commit
+      - name: Run pre-commit hooks (skip gitleaks)
+        run: SKIP=gitleaks-staged pre-commit run --all-files
+
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1   # chỉ lấy commit mới nhất
+      - name: Install gitleaks
+        run: |
+          go install github.com/zricethezav/gitleaks/v8@latest
+          echo "$HOME/go/bin" >> $GITHUB_PATH
+      - name: Run gitleaks scan (current files only)
+        run: gitleaks detect --redact --no-git --source .
+

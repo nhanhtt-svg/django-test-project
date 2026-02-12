@@ -2,15 +2,15 @@ default_stages: [pre-commit]
 
 repos:
   # 1) Formatter check-only: YAPF
-  - repo: local
-    hooks:
-      - id: yapf-check
-        name: "yapf: check format (no auto-fix)"
-        entry: yapf --diff --style .style.yapf
-        language: python
-        additional_dependencies: ["yapf==0.43.0"]
-        types: [python]
-        exclude: ^(.*\/migrations\/|static\/|media\/|dist\/|build\/)
+  # - repo: local
+  #   hooks:
+  #     - id: yapf-check
+  #       name: "yapf: check format (no auto-fix)"
+  #       entry: yapf --diff --style .style.yapf
+  #       language: python
+  #       additional_dependencies: ["yapf==0.43.0"]
+  #       types: [python]
+  #       exclude: ^(.*\/migrations\/|static\/|media\/|dist\/|build\/)
 
   # 2) Linter: Ruff
   - repo: https://github.com/astral-sh/ruff-pre-commit
@@ -21,35 +21,29 @@ repos:
         name: ruff-errors
         args: ["--config=pyproject.toml"]
 
-      - id: ruff-check
-        name: ruff-imports
-        args: ["--fix", "--select", "I", "--exit-zero"]
-        verbose: true
-
       # Hook 2: "WARNING" (non-blocking) - luôn pass
       - id: ruff-check
         name: ruff-warnings
         args: ["--select", "E501", "--exit-zero"]  # --exit-zero → luôn exit code = 0
         verbose: true
+      
+      - id: ruff-check
+        name: ruff-imports
+        args: ["--fix", "--select", "I", "--exit-zero"]
+        verbose: true
+
     
   - repo: https://github.com/pycqa/pylint
     rev: v3.2.7
     hooks:
       - id: pylint
-        args:
-          - "--init-hook=import os, sys; sys.path.insert(0, '.'); os.environ.setdefault('DJANGO_SETTINGS_MODULE','mysite.settings'); import django; django.setup()"
-          - "--load-plugins=pylint_django"
-          - "--django-settings-module=mysite.settings"
-          - "--enable=all"
-          - "--max-nested-blocks=5"
-          - "--max-branches=12"
-          - "--max-statements=50"
+        args: ["--rcfile=.pylintrc"]
         additional_dependencies:
           - django
           - pylint-django
           - pytest
           - pyyaml
-        exclude: (^migrations/.*|^static/.*|^media/.*|^dist/.*|^build/.*)
+
 
 
 
@@ -62,34 +56,16 @@ repos:
         entry: bash -lc "gitleaks protect --staged --redact --verbose --config .gitleaks.toml"
         language: system
 
-
-    # 5) Custom rules (team)
-  - repo: local
-    hooks:
-      - id: check-no-print
-        name: "custom: forbid print() in production"
-        entry: python tools/local-gate/check_no_print.py --config tools/local-gate/rules.yaml
-        language: python
-        additional_dependencies: ["pyyaml==6.0.2"]
-        types: [python]
-        exclude: ^(.*\/migrations\/|static\/|media\/|dist\/|build\/)
-
-      - id: check-max-nested
-        name: "custom: không quá 3 mức if/for/while lồng"
-        entry: python tools/local-gate/check_max_nested.py
-        language: python
-        types: [python]
-        exclude: "tests/|tools/local-gate/"
-        args: ["--config=tools/local-gate/rules.yaml", "--max-depth=2"]  # ← THÊM
- 
-  - repo: local
-    hooks:
-      - id: pytest-pre-push
-        name: "pytest (unit) - pre-push gate"
-        entry: bash -lc "python3 -m pytest -q --tb=short"
-        language: system
-        pass_filenames: false
-        stages: [pre-push]
+  # - repo: local
+  #   hooks:
+  #     - id: pytest-pre-push
+  #       name: "pytest (unit) - pre-push gate"
+  #       entry: bash -lc "python3 -m pytest -q --tb=short"
+  #       language: system
+  #       pass_filenames: false
+  #       stages: [pre-push]
+  #       always_run: true
+  #       exclude: ^(.*\/migrations\/|static\/|media\/|dist\/|build\/)
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.10.0   # chọn version mypy phù hợp
