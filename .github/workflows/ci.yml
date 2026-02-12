@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 1   # chỉ lấy commit mới nhất
       - name: Install gitleaks
         run: |
-          go install github.com/gitleaks/gitleaks/v8@latest
+          go install github.com/zricethezav/gitleaks/v8@latest
           echo "$HOME/go/bin" >> $GITHUB_PATH
       - name: Run gitleaks scan (current files only)
         run: gitleaks detect --redact --no-git --source .
